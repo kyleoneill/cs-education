@@ -49,7 +49,7 @@ void Vec<T>::pop_back() {
     unsigned int len = this->length;
     if(len > 0) {
         // Here I can use either `delete this->ptr[len]` or `this->ptr[len].~T()`
-        // The first would release memory, which we do not want. We want to destruct the element at len,
+        // The first would release memory, which we do not want. We want to destruct the final element,
         // but we do not want to free the memory. The memory is still owned by the vector until this->capacity.
         this->ptr[len - 1].~T();
         this->length -= 1;
@@ -78,9 +78,6 @@ void Vec<T>::remove(unsigned int position) {
 
 template<typename T>
 void Vec<T>::_insert_element(T new_elm, unsigned int position) {
-    // This technically should be (position >= this->length), if we are adding to the end of the array this function
-    // should not be used as push_back is constant and this function is linear, but it seems weird to error for valid
-    // but inefficient calls
     if(position > this->length) {
         throw std::runtime_error("Tried to insert at an invalid vector index.");
     }
