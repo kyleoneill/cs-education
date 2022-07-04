@@ -1,0 +1,2 @@
+add_executable(Doctest_tests_run CVecTests.cpp)
+target_link_libraries(Doctest_tests_run cvec)
