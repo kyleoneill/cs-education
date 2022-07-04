@@ -2,6 +2,14 @@
 #include "doctest.h"
 #include "../library.h"
 
+Vec<int> create_vector() {
+    Vec<int> some_vec{};
+    for(int i = 0; i < 20; i++) {
+        some_vec.push_back(i);
+    }
+    return some_vec;
+}
+
 TEST_CASE("Vector constructor") {
     Vec<int> some_vec{};
     CHECK(some_vec.len() == 0);
@@ -66,10 +74,7 @@ TEST_CASE("Vector pop_back") {
 }
 
 TEST_CASE("Vector push_front") {
-    Vec<int> some_vec{};
-    for(int i = 0; i < 20; i++) {
-        some_vec.push_back(i);
-    }
+    Vec<int> some_vec = create_vector();
 
     // push_front and verify that the new length is correct and the new values were added to the front
     for(int i = 0; i < 5; i++) {
@@ -81,10 +86,7 @@ TEST_CASE("Vector push_front") {
 }
 
 TEST_CASE("Vector pop_front") {
-    Vec<int> some_vec{};
-    for(int i = 0; i < 20; i++) {
-        some_vec.push_back(i);
-    }
+    Vec<int> some_vec = create_vector();
 
     // pop_front and verify that the new length is correct and values were removed from the front
     for(int i = 0; i < 5; i++) {
@@ -96,10 +98,7 @@ TEST_CASE("Vector pop_front") {
 }
 
 TEST_CASE("Vector insert") {
-    Vec<int> some_vec{};
-    for(int i = 0; i < 20; i++) {
-        some_vec.push_back(i);
-    }
+    Vec<int> some_vec = create_vector();
 
     // Insert at some index, make sure that the first/last and values around that index are all correct
     some_vec.insert(100, 7);
@@ -112,10 +111,7 @@ TEST_CASE("Vector insert") {
 }
 
 TEST_CASE("Vector remove") {
-    Vec<int> some_vec{};
-    for(int i = 0; i < 20; i++) {
-        some_vec.push_back(i);
-    }
+    Vec<int> some_vec = create_vector();
 
     // Remove from some index, make sure that the first/last and values around that index are all correct
     some_vec.remove(10);
