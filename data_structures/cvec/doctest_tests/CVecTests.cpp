@@ -1,11 +1,23 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 #include "../library.h"
+using std::string;
 
-Vec<int> create_vector() {
+/// Create an int vector that contains 20 values which are equivalent to their position.
+/// Ex, some_vec[2] will be 2
+Vec<int> create_int_vector() {
     Vec<int> some_vec{};
     for(int i = 0; i < 20; i++) {
         some_vec.push_back(i);
+    }
+    return some_vec;
+}
+
+/// Create a string vector that contains 20 values all set to "test"
+Vec<string> create_str_vector() {
+    Vec<string> some_vec{};
+    for(int i = 0; i < 20; i++) {
+        some_vec.push_back("test");
     }
     return some_vec;
 }
@@ -74,7 +86,7 @@ TEST_CASE("Vector pop_back") {
 }
 
 TEST_CASE("Vector push_front") {
-    Vec<int> some_vec = create_vector();
+    Vec<int> some_vec = create_int_vector();
 
     // push_front and verify that the new length is correct and the new values were added to the front
     for(int i = 0; i < 5; i++) {
@@ -86,7 +98,7 @@ TEST_CASE("Vector push_front") {
 }
 
 TEST_CASE("Vector pop_front") {
-    Vec<int> some_vec = create_vector();
+    Vec<int> some_vec = create_int_vector();
 
     // pop_front and verify that the new length is correct and values were removed from the front
     for(int i = 0; i < 5; i++) {
@@ -98,7 +110,7 @@ TEST_CASE("Vector pop_front") {
 }
 
 TEST_CASE("Vector insert") {
-    Vec<int> some_vec = create_vector();
+    Vec<int> some_vec = create_int_vector();
 
     // Insert at some index, make sure that the first/last and values around that index are all correct
     some_vec.insert(100, 7);
@@ -111,7 +123,7 @@ TEST_CASE("Vector insert") {
 }
 
 TEST_CASE("Vector remove") {
-    Vec<int> some_vec = create_vector();
+    Vec<int> some_vec = create_int_vector();
 
     // Remove from some index, make sure that the first/last and values around that index are all correct
     some_vec.remove(10);
@@ -121,4 +133,43 @@ TEST_CASE("Vector remove") {
     CHECK(some_vec[9] == 9);
     CHECK(some_vec[10] == 11);
     CHECK(some_vec[11] == 12);
+}
+
+TEST_CASE("Vector with non-trivial copy type") {
+    // This test verifies that vector works with a type that is not trivially copy-able.
+    // A type is trivially copy-able if you can just copy their bits.
+    // Strings are non-trivially copy-able as they own data through a pointer.
+    // When we copy a string we are copying its pointer and length into pre-allocated space in our vector and then
+    // copy the bytes of the string and set the pointer to point to those bytes.
+
+    Vec<string> some_vec = create_str_vector();
+
+    // Verify that the constructor helper function added 20 strings, and we have a length of 20
+    CHECK(some_vec.len() == 20);
+
+    // Verify that we can index a vector of strings
+    CHECK(some_vec[0] == "test");
+
+    // Test that we can push_back with a string vec
+    some_vec.push_back("new_back");
+    CHECK(some_vec.len() == 21);
+    CHECK(some_vec[some_vec.len() - 1] == "new_back");
+
+    // Test that we can push_front with a string vec
+    some_vec.push_front("new_front");
+    CHECK(some_vec.len() == 22);
+    CHECK(some_vec[0] == "new_front");
+
+    // Test that we can insert with a string vec
+    some_vec.insert("new_random_position", 1);
+    CHECK(some_vec.len() == 23);
+    CHECK(some_vec[0] == "new_front");
+    CHECK(some_vec[1] == "new_random_position");
+    CHECK(some_vec[2] == "test");
+
+    // Test that we can remove values with a string vec
+    some_vec.remove(1);
+    CHECK(some_vec.len() == 22);
+    CHECK(some_vec[0] == "new_front");
+    CHECK(some_vec[1] == "test");
 }
